@@ -1,0 +1,10 @@
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'bufr'
+    }
+}
+
+dependencies {
+  compile project(':cdm')
+  compile ('com.lexicalscope.jewelcli:jewelcli:0.8.5')
+}

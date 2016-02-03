@@ -1,0 +1,73 @@
+***************
+*** 441,446 ****
+      return open(location, null);
+    }
+  
+    /**
+     * Open an existing file (read only), with option of cancelling.
+     *
+--- 441,450 ----
+      return open(location, null);
+    }
+  
++   public static NetcdfFile open(ucar.unidata.io.RandomAccessFile raf, String location) throws IOException {
++     return open(raf, location, null, null);
++   }
++ 
+    /**
+     * Open an existing file (read only), with option of cancelling.
+     *
+***************
+*** 1159,1164 ****
+    }
+  
+    /**
+     * Return the unlimited (record) dimension, or null if not exist.
+     * If there are multiple unlimited dimensions, it will return the first one.
+     *
+--- 1163,1181 ----
+    }
+  
+    /**
++    * Return true if this file supports querying for locality information.
++    * @return if the file can return locality information
++    * @throws IOException if there is not an IOServiceProvider set
++    */
++   public boolean supportsLocalityInformation() throws IOException {
++     if (spi == null) {
++       throw new IOException("spi is null");
++     }
++ 
++     return spi.supportsLocalityInformation();
++   }
++ 
++   /**
+     * Return the unlimited (record) dimension, or null if not exist.
+     * If there are multiple unlimited dimensions, it will return the first one.
+     *
+***************
+*** 1910,1915 ****
+      return makeValidCdmObjectName(sbuff.toString());
+    }
+  
+    //////////////////////////////////////////////////////////////////////////////////////
+    // Service Provider calls
+    // All IO eventually goes through these calls.
+--- 1927,1943 ----
+      return makeValidCdmObjectName(sbuff.toString());
+    }
+  
++   public ArrayLong getLocalityInformation(ucar.nc2.Variable v, Section ranges) 
++          throws IOException, InvalidRangeException {
++     if (spi == null) {
++       throw new IOException("spi is null");
++     } else if (!spi.supportsLocalityInformation()) { 
++       throw new IOException("IOSP " + spi.getFileTypeId() + " does not support getLocalityInformation()");
++     }
++ 
++     return spi.getLocalityInformation(v, ranges);
++   }
++ 
+    //////////////////////////////////////////////////////////////////////////////////////
+    // Service Provider calls
+    // All IO eventually goes through these calls.

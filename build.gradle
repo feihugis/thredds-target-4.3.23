@@ -1,0 +1,46 @@
+subprojects {
+  apply plugin: 'java'
+
+  sourceCompatibility = 1.6
+  version = '4.3.18'
+
+  repositories {
+    maven {
+        url "https://artifacts.unidata.ucar.edu/content/groups/unidata/"
+    }
+    mavenCentral()
+  }
+
+  /* uploadArchives {
+    repositories {
+      flatDir {
+        dirs 'repos'
+      }
+    }
+  } */
+
+  // import fatJar
+  buildscript {
+      repositories {
+          mavenCentral()
+      }
+
+      dependencies {
+          classpath 'eu.appsatori:gradle-fatjar-plugin:0.2-rc1'
+      }
+  }
+
+  jar {
+    manifest {
+      attributes 'Implementation-Version': version,
+              'Implementation-Vendor': 'UCAR/Unidata',
+              'Implementation-Vendor-Id': 'edu.ucar',
+              'Built-On': new Date(),
+              'Build-Jdk': System.properties['java.version'],
+              'Codebase': 'http://www.unidata.ucar.edu/software/thredds/',
+              'Permissions': 'all-permissions',
+              'Trusted-Only': 'true'
+    }
+  }
+
+}
