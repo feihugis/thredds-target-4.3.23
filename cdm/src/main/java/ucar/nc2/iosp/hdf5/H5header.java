@@ -181,7 +181,7 @@ public class H5header {
       raf.seek(filePos);
       raf.read(b);
       String magic = new String(b);
-      if (magic.equals(hdf5magic)) {
+      if (magic.equals(hdf5magic)) {    //to make sure this file is in HDF5 format
         ok = true;
         break;
       }

@@ -21,7 +21,7 @@ public class TestHDF {
         NetcdfFile ncfile = NetcdfFile.open("/Users/feihu/Documents/Data/Merra100S/MERRA300.prod.simul.tavg1_2d_mld_Nx.20141003.hdf");
         Variable var = ncfile.getVariables().get(6);//6
         List<Variable>varList = ncfile.getVariables();
-
+        System.out.println(ncfile.getDetailInfo());
         for (Variable variable : varList) {
             if (variable.getShortName().equals("LAI")) {
                 var = variable;
