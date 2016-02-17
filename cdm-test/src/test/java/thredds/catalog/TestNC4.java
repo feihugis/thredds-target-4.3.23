@@ -33,10 +33,30 @@ public class TestNC4 {
     int[] shape = new int[] {1,1,1};
     //H5header.Vinfo vinfo = (H5header.Vinfo) var.getSPobject();
     //int[] tmp = vinfo.getChunking();
-    Array value = var.read();
-    value.getShape();
+    //Array value = var.read();
+    //value.getShape();
     //var.getVarLocationInformation();
-    System.out.println(var.getShortName()+ "+++++++++" + var.read(start, shape).getSize() + " , " + var.getVarLocationInformation());
+    //System.out.println(var.getShortName()+ "+++++++++" + var.read(start, shape).getSize() + " , " + var.getVarLocationInformation());
+    String varInfo = var.getVarLocationInformation();
+    int i=0;
+    String[] chunks = varInfo.split(";");
+    for (String chunk : chunks ) {
+      int sizeB = chunk.indexOf("size=") + "size=".length();
+      int sizeE = chunk.indexOf(" filterMask");
+      int size = Integer.parseInt(chunk.substring(sizeB, sizeE));
+
+      int posB = chunk.indexOf("filePos=") + "filePos=".length();
+      int posE = chunk.indexOf(" offsets");
+      int filePos = Integer.parseInt(chunk.substring(posB, posE));
+      //System.out.println(chunk + "\n");
+
+      if (i%2 >0) {
+        System.out.println("" + filePos + " ; End " + (filePos+size) + "----------" + chunk+ "\n");
+      } else{
+        System.out.println("" + (filePos+size) + " ; Start: " + filePos + "----------" + chunk+ "\n");
+      }
+      i++;
+    }
     //}
   }
 
