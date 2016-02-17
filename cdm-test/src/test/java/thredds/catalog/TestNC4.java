@@ -36,7 +36,14 @@ public class TestNC4 {
     Array value = var.read();
     value.getShape();
     //var.getVarLocationInformation();
-    System.out.println(var.getShortName()+ "+++++++++" + var.read(start, shape).getSize() + " , " + var.getVarLocationInformation());
+    //System.out.println(var.getShortName()+ "+++++++++" + var.read(start, shape).getSize() + " , " + var.getVarLocationInformation());
+    String varInfo = var.getVarLocationInformation();
+    String[] chunks = varInfo.split(";");
+    for (String chunk : chunks ) {
+      int tt = chunk.indexOf("size=");
+      System.out.println(chunk + "\r");
+      System.out.println(tt + "\r");
+    }
     //}
   }
 
