@@ -53,6 +53,7 @@ import java.util.Formatter;
  * HDF5 I/O
  *
  * @author caron
+ * extanded by @author Fei Hu, hufei68@gmail.com or fhu@gmu.edu
  */
 
 public class H5iosp extends AbstractIOServiceProvider {
@@ -88,6 +89,15 @@ public class H5iosp extends AbstractIOServiceProvider {
 
   public boolean isValidFile(ucar.unidata.io.RandomAccessFile raf) throws IOException {
     return H5header.isValidFile(raf);
+  }
+
+
+  /**
+   * return true, which means that this IOSP support H5Map info for the further index
+   * @return true
+   */
+  public boolean supportsLocalityInformation() {
+    return true;
   }
 
   public String getFileTypeId() {
@@ -136,6 +146,15 @@ public class H5iosp extends AbstractIOServiceProvider {
     ncfile.finish();
   }
 
+  public String getVarLocationInformation(Variable v) throws InvalidRangeException, IOException {
+    if (v instanceof Structure)
+      return null; //readStructureData((Structure) v, v.getShapeAsSection());
+
+    String info = new String();
+
+    return info;
+  }
+
   public Array readData(ucar.nc2.Variable v2, Section section) throws IOException, InvalidRangeException {
     H5header.Vinfo vinfo = (H5header.Vinfo) v2.getSPobject();
     return readData(v2, vinfo.dataPos, section);
@@ -160,7 +179,9 @@ public class H5iosp extends AbstractIOServiceProvider {
       assert vinfo.isChunked;
       ByteOrder bo = (vinfo.typeInfo.endian == 0) ? ByteOrder.BIG_ENDIAN : ByteOrder.LITTLE_ENDIAN;
       layout = new H5tiledLayoutBB(v2, wantSection, raf, vinfo.mfp.getFilters(), bo);
+      System.out.println("****************11***************" + IospHelper.getVarLocationInformation((LayoutBB) layout));
       data = IospHelper.readDataFill((LayoutBB) layout, v2.getDataType(), vinfo.getFillValue());
+
 
     } else { // normal case
       if (debug) System.out.println("read variable " + v2.getFullName() + " vinfo = " + vinfo);

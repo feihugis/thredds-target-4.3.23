@@ -180,7 +180,7 @@ public class LayoutBBTiled implements LayoutBB {
 
                 index = new IndexChunkerTiled(dataSection, want); // new indexer into this chunk
                 next = new Chunk( dataChunk.getByteBuffer()); // this does the uncompression
-                valueList.add(dataChunk.getChunkInfo());
+                valueList.add(dataSection.toString() + dataChunk.getChunkInfo());
 
             } catch (InvalidRangeException e) {
                 throw new IllegalStateException(e);

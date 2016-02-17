@@ -206,9 +206,9 @@ public class DataBTree {
 
     }
 
-    // this finds the first entry we dont want to skip.
+    // this finds the first entry we don't want to skip.
     // entry i goes from [offset(i),offset(i+1))
-    // we want to skip any entries we dont need, namely those where want >= offset(i+1)
+    // we want to skip any entries we don't need, namely those where want >= offset(i+1)
     // so keep skipping until want < offset(i+1)
     void first(int[] wantOrigin) throws IOException {
       if (level == 0) {
@@ -294,7 +294,7 @@ public class DataBTree {
   class DataChunk {
     int size;       // size of chunk in bytes; need storage layout dimensions to interpret
     int filterMask; // bitfield indicating which filters have been skipped for this chunk
-    int[] offset;   // offset index of this chunk, reletive to entire array
+    int[] offset;   // offset index of this chunk, relative to entire array
     long filePos;   // filePos of a single raw data chunk, already shifted by the offset if needed
 
     DataChunk(int ndim, boolean last) throws IOException {

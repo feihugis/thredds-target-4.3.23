@@ -93,7 +93,7 @@ class H5tiledLayoutBB implements LayoutBB {
     this.byteOrder = byteOrder;
 
     // we have to translate the want section into the same rank as the storageSize, in order to be able to call
-    // Section.intersect(). It appears that storageSize (actually msl.chunkSize) may have an extra dimension, reletive
+    // Section.intersect(). It appears that storageSize (actually msl.chunkSize) may have an extra dimension, relative
     // to the Variable.
     DataType dtype = v2.getDataType();
     if ((dtype == DataType.CHAR) && (wantSection.getRank() < vinfo.storageSize.length))
@@ -127,8 +127,14 @@ class H5tiledLayoutBB implements LayoutBB {
     return delegate.hasNext();
   }
 
+
+  /**
+   * revised by @author Fei Hu, hufei68@gmail.com
+   * @param info
+   * @return
+   */
   public boolean hasNext(List<String> info) {
-        return delegate.hasNext();
+        return delegate.hasNext(info);
     }
 
     public Chunk next() throws IOException {
@@ -181,7 +187,10 @@ class H5tiledLayoutBB implements LayoutBB {
     }
 
     public String getChunkInfo() throws IOException {
-        return "Please fix getChunkInfo in H5tiledLayoutBB.java";
+        //return "Please fix getChunkInfo in H5tiledLayoutBB.java";
+      String info = "";
+      info = delegate.toString() + ";";
+      return info;
     }
 
     public ByteBuffer getByteBuffer() throws IOException {

@@ -550,7 +550,7 @@ public class H4iosp extends AbstractIOServiceProvider {
 
         // read compressed data in
         H4header.TagData cdata = compress.getDataTag();
-        info =  "start at " + cdata.offset + ", length is " + cdata.length + "; ";
+        info =   " start at " + cdata.offset + ", length is " + cdata.length + ", compress code is " + compress.compress_type + "; ";
 
 
         return info;
