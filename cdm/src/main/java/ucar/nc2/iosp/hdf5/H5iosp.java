@@ -146,13 +146,57 @@ public class H5iosp extends AbstractIOServiceProvider {
     ncfile.finish();
   }
 
-  public String getVarLocationInformation(Variable v) throws InvalidRangeException, IOException {
-    if (v instanceof Structure)
-      return null; //readStructureData((Structure) v, v.getShapeAsSection());
+  public String getVarLocationInformation(Variable v2) throws InvalidRangeException, IOException {
+    H5header.Vinfo vinfo = (H5header.Vinfo) v2.getSPobject();
+    DataType dataType = v2.getDataType();
+    Object data;
+    Layout layout;
+    Section wantSection = v2.getShapeAsSection();
+    long dataPos = vinfo.dataPos;
 
-    String info = new String();
 
-    return info;
+    if (vinfo.mfp != null) { // filtered
+      if (debugFilter) System.out.println("read variable filtered " + v2.getFullName() + " vinfo = " + vinfo);
+      assert vinfo.isChunked;
+      ByteOrder bo = (vinfo.typeInfo.endian == 0) ? ByteOrder.BIG_ENDIAN : ByteOrder.LITTLE_ENDIAN;
+      layout = new H5tiledLayoutBB(v2, wantSection, raf, vinfo.mfp.getFilters(), bo);
+      return IospHelper.getVarLocationInformation((LayoutBB) layout);
+    } else { // normal case
+      if (debug) System.out.println("read variable " + v2.getFullName() + " vinfo = " + vinfo);
+
+      DataType readDtype = v2.getDataType();
+      int elemSize = v2.getElementSize();
+      Object fillValue = vinfo.getFillValue();
+      int endian = vinfo.typeInfo.endian;
+
+      // fill in the wantSection
+      wantSection = Section.fill(wantSection, v2.getShape());
+
+      if (vinfo.typeInfo.hdfType == 2) { // time
+        readDtype = vinfo.mdt.timeType;
+        elemSize = readDtype.getSize();
+        fillValue = vinfo.getFillValueDefault(readDtype);
+
+      } else if (vinfo.typeInfo.hdfType == 8) { // enum
+        H5header.TypeInfo baseInfo = vinfo.typeInfo.base;
+        readDtype = baseInfo.dataType;
+        elemSize = readDtype.getSize();
+        fillValue = vinfo.getFillValueDefault(readDtype);
+        endian = baseInfo.endian;
+
+      } else if (vinfo.typeInfo.hdfType == 9) { // vlen
+        elemSize = vinfo.typeInfo.byteSize;
+        endian = vinfo.typeInfo.endian;
+        wantSection = wantSection.removeVlen(); // remove vlen dimension
+      }
+
+      if (vinfo.isChunked) {
+        layout = new H5tiledLayout((H5header.Vinfo) v2.getSPobject(), readDtype, wantSection);
+      } else {
+        layout = new LayoutRegular(dataPos, elemSize, v2.getShape(), wantSection);
+      }
+      return IospHelper.getVarLocationInformation((LayoutBB) layout);
+    }
   }
 
   public Array readData(ucar.nc2.Variable v2, Section section) throws IOException, InvalidRangeException {
@@ -179,7 +223,7 @@ public class H5iosp extends AbstractIOServiceProvider {
       assert vinfo.isChunked;
       ByteOrder bo = (vinfo.typeInfo.endian == 0) ? ByteOrder.BIG_ENDIAN : ByteOrder.LITTLE_ENDIAN;
       layout = new H5tiledLayoutBB(v2, wantSection, raf, vinfo.mfp.getFilters(), bo);
-      System.out.println("****************11***************" + IospHelper.getVarLocationInformation((LayoutBB) layout));
+      //System.out.println("****************11***************" + IospHelper.getVarLocationInformation((LayoutBB) layout));
       data = IospHelper.readDataFill((LayoutBB) layout, v2.getDataType(), vinfo.getFillValue());
 
 
