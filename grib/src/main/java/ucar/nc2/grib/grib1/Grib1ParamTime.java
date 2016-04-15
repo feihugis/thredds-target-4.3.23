@@ -232,6 +232,18 @@ public class Grib1ParamTime {
         isInterval = true;
         break;
 
+      // ECMWF "Average of N Forecast" added 11/21/2014
+      // see "http://emoslib.sourcearchive.com/documentation/000370.dfsg.2/grchk1_8F-source.html"
+      // C     Add Time range indicator = 120 Average of N Forecast. Each product
+      // C             is an accumulation from forecast lenght P1 to forecast
+      // C              lenght P2, with reference times at intervals P2-P1
+      case 120:
+        start = p1;
+        end = p2;
+        isInterval = true;
+        forecastTime = p1;
+        break;
+
       // Average of N uninitialized analyses, starting at the reference time, at intervals of P2
       case 123:
         start = 0;
