@@ -370,6 +370,15 @@ public abstract class GribCollection implements FileCacheable {
     // absolute location
     MFile mfile = files.get(fileno);
     String filename = mfile.getPath();
+
+    //for the scenario that the io is HDFS
+    if (filename.contains(":")) {
+      filename = filename.split(":")[1];
+      RandomAccessFile want = getDataRaf(filename);
+      want.order(RandomAccessFile.BIG_ENDIAN);
+      return want;
+    }
+
     File dataFile = new File(filename);
 
     // check reletive location - eg may be /upc/share instead of Q:
