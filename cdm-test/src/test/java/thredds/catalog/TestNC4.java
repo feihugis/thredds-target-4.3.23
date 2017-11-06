@@ -18,7 +18,7 @@ public class TestNC4 {
 
   public static void main(String[] args) throws IOException, InvalidRangeException {
     //String fPath = "/Users/feihu/Documents/Data/Merra/MERRA300.prod.simul.tavgM_2d_mld_Nx.201306.hdf";
-    String fPath = "/Users/feihu/Documents/Data/Merra2/MERRA2_100.inst1_2d_int_Nx.19800101.nc4";
+    String fPath = "/Users/fei.hu1@ibm.com/Downloads/test.nc4";
 
     RandomAccessFile randomAccessFile = new RandomAccessFile(fPath, "rws");
     randomAccessFile.setDebugAccess(true);
@@ -28,7 +28,7 @@ public class TestNC4 {
     //System.out.println(ncfile.getDetailInfo());
     List<Variable> varList = ncfile.getVariables();
     //for (Variable var : varList) {
-    Variable var = varList.get(10);
+    Variable var = varList.get(3);
     int[] start = new int[] {0,0,0};
     int[] shape = new int[] {1,1,1};
     //H5header.Vinfo vinfo = (H5header.Vinfo) var.getSPobject();
