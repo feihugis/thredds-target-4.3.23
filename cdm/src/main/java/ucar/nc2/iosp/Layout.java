@@ -33,6 +33,7 @@
 package ucar.nc2.iosp;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Iterator to read/write subsets of a multidimensional array, finding the contiguous chunks.
@@ -97,6 +98,8 @@ public interface Layout {
    * @return true if theres more to do
    */
   public boolean hasNext();
+
+  public boolean hasNext(List<String> info);
 
   /**
    * Get the next chunk

@@ -32,6 +32,8 @@
  */
 package ucar.nc2.iosp;
 
+import java.util.List;
+
 import ucar.ma2.Index;
 import ucar.ma2.Section;
 import ucar.ma2.InvalidRangeException;
@@ -104,6 +106,13 @@ public class LayoutSegmented implements Layout {
 
   public boolean hasNext() {
     return done < total;
+  }
+
+  @Override
+  public boolean hasNext(List<String> info) {
+    throw new IllegalArgumentException("Please implement this function "
+                                       + "ucar.nc2.iosp.LayoutSegmented.hasNext"
+                                       + "(java.util.List<java.lang.String>)");
   }
 
   ///////////////////

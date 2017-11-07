@@ -3,6 +3,7 @@ package thredds.catalog;
 import java.io.IOException;
 import java.util.List;
 
+import ucar.ma2.Array;
 import ucar.ma2.InvalidRangeException;
 import ucar.nc2.NetcdfFile;
 import ucar.nc2.Variable;
@@ -15,7 +16,7 @@ public class TestNC4 {
 
   public static void main(String[] args) throws IOException, InvalidRangeException {
     //String fPath = "/Users/feihu/Documents/Data/Merra/MERRA300.prod.simul.tavgM_2d_mld_Nx.201306.hdf";
-    String fPath = "/Users/feihu/Documents/Data/Merra2/MERRA2_100.inst1_2d_int_Nx.19800101.nc4";
+    String fPath = "/Users/fei.hu1@ibm.com/Downloads/test.nc4";
 
     RandomAccessFile randomAccessFile = new RandomAccessFile(fPath, "rws");
     randomAccessFile.setDebugAccess(true);
@@ -26,9 +27,11 @@ public class TestNC4 {
     List<Variable> varList = ncfile.getVariables();
     varList.get(5).read();
     //for (Variable var : varList) {
-    Variable var = varList.get(10);
+    Variable var = varList.get(3);
+
     int[] start = new int[] {0,0,0};
     int[] shape = new int[] {1,1,1};
+    Array value = var.read(start, shape);
     //H5header.Vinfo vinfo = (H5header.Vinfo) var.getSPobject();
     //int[] tmp = vinfo.getChunking();
     //Array value = var.read();
@@ -37,10 +40,10 @@ public class TestNC4 {
     //System.out.println(var.getShortName()+ "+++++++++" + var.read(start, shape).getSize() + " , " + var.getVarLocationInformation());
     String varInfo = var.getVarLocationInformation();
     System.out.println(varInfo);
-    System.out.println(varInfo);
     int i=0;
     String[] chunks = varInfo.split(";");
-    for (String chunk : chunks ) {
+
+    /*for (String chunk : chunks ) {
       int sizeB = chunk.indexOf("size=") + "size=".length();
       int sizeE = chunk.indexOf(" filterMask");
       int size = Integer.parseInt(chunk.substring(sizeB, sizeE));
@@ -56,7 +59,7 @@ public class TestNC4 {
         //System.out.println("" + (filePos+size) + " ; Start: " + filePos + "----------" + chunk+ "\n");
       }
       i++;
-    }
+    }*/
     //}
   }
 

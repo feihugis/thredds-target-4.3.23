@@ -32,6 +32,8 @@
  */
 package ucar.nc2.iosp;
 
+import java.util.List;
+
 import ucar.ma2.Section;
 import ucar.ma2.InvalidRangeException;
 
@@ -78,6 +80,16 @@ public class LayoutRegular implements Layout {
 
   public boolean hasNext() {
     return chunker.hasNext();
+  }
+
+  @Override
+  public boolean hasNext(List<String> info) {
+    try {
+      throw new IllegalAccessException("Please implement this function");
+    } catch (IllegalAccessException e) {
+      e.printStackTrace();
+    }
+    return false;
   }
 
   public Chunk next() {
