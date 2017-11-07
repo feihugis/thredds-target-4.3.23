@@ -172,7 +172,7 @@ public class LayoutTiled implements Layout {
           System.out.println(" found intersecting section: " + dataSection + " for filePos " + dataChunk.filePos);
         index = new IndexChunkerTiled(dataSection, want);
         startSrcPos = dataChunk.filePos;
-        valueList.add(dataSection.toString() + dataChunk.getChunkInfo() + ";");
+        valueList.add(dataSection.toString() + dataChunk.getChunkInfo(this.elemSize * index.getTotal()) + ";");
       } catch (InvalidRangeException e) {
         throw new IllegalStateException(e);
       }
@@ -218,9 +218,9 @@ public class LayoutTiled implements Layout {
       this.filePos = filePos;
     }
 
-    public String getChunkInfo() {
+    public String getChunkInfo(long size) {
       StringBuilder sbuff = new StringBuilder();
-      sbuff.append("  ChunkedDataNode size=").append("-1").append(" filterMask=").append("-1").append(" filePos=").append(filePos).append(" offsets= ");
+      sbuff.append("  ChunkedDataNode size=").append(size).append(" filterMask=").append("-1").append(" filePos=").append(filePos).append(" offsets= ");
       for (long anOffset : offset) {
         sbuff.append(anOffset).append(" ");
       }

@@ -63,6 +63,7 @@ public class IndexChunkerTiled {
 
   private IndexChunker.Chunk chunk; // gets returned on next().
   private int nelems; // number of elements to read at one time
+
   private long total, done;
   private int startDestElem; // the offset in the result Array of this piece of it
   private int startSrcElem; // the offset in the source Array of this piece of it
@@ -200,6 +201,10 @@ public class IndexChunkerTiled {
       System.out.println("RegularSectionLayout total = "+total+" nchunks= "+nchunks+" nelems= "+nelems+
           " dataSection= " + dataSection + " wantSection= " + wantSection+ " intersect= " + intersect+ this);
     }
+  }
+
+  public long getTotal() {
+    return total;
   }
 
   private class Dim {
