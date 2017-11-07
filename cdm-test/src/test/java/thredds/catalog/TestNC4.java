@@ -16,7 +16,8 @@ public class TestNC4 {
 
   public static void main(String[] args) throws IOException, InvalidRangeException {
     //String fPath = "/Users/feihu/Documents/Data/Merra/MERRA300.prod.simul.tavgM_2d_mld_Nx.201306.hdf";
-    String fPath = "/Users/feihu/Documents/Data/M2T1NXINT/1980/01/MERRA2_100.tavg1_2d_int_Nx.19800101.nc4";
+    //String fPath = "/Users/feihu/Documents/Data/M2T1NXINT/1980/01/MERRA2_100.tavg1_2d_int_Nx.19800101.nc4";
+    String fPath = "/Users/feihu/Downloads/test.nc4";
 
     //String fPath = "/Users/fei.hu1@ibm.com/Downloads/test.nc4";
 
@@ -25,11 +26,8 @@ public class TestNC4 {
 
     NetcdfFile ncfile = NetcdfFile.open(randomAccessFile, fPath);
 
-    //System.out.println(ncfile.getDetailInfo());
     List<Variable> varList = ncfile.getVariables();
-    varList.get(5).read();
-    //for (Variable var : varList) {
-    Variable var = varList.get(11);
+    Variable var = varList.get(3);
 
     int[] start = new int[] {0,0,0};
     int[] shape = new int[] {1,1,1};
