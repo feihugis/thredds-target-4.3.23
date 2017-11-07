@@ -36,6 +36,7 @@ import ucar.ma2.InvalidRangeException;
 import ucar.ma2.Section;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * For datasets where the data are stored in chunks.
@@ -58,7 +59,7 @@ public class LayoutTiled implements Layout {
   // track the overall iteration
   private long totalNelems, totalNelemsDone; // total number of elemens
 
-  private boolean debug = false, debugNext= false;
+  private boolean debug = false, debugNext= false, debugIntersection = false;
 
   /**
    * Constructor.
@@ -137,6 +138,53 @@ public class LayoutTiled implements Layout {
     return true;
   }
 
+  public boolean hasNext(List<String> valueList) { // have to actually fetch the thing
+    if (totalNelemsDone >= totalNelems) return false;
+
+    if ((index == null) || !index.hasNext()) { // get new data node
+      try {
+        Section dataSection;
+        DataChunk dataChunk;
+
+        while (true) { // look for intersecting sections
+
+          if (!chunkIterator.hasNext()) {
+            next = null;
+            return false;
+          }
+
+          // get next dataChunk
+          try {
+            dataChunk = chunkIterator.next();
+          } catch (IOException e) {
+            e.printStackTrace();
+            next = null;
+            return false;
+          }
+
+          // make the dataSection for this chunk
+          dataSection = new Section(dataChunk.offset, chunkSize);
+          if (dataSection.intersects(want)) // does it intersect ?
+            break;
+        }
+
+        if (debug)
+          System.out.println(" found intersecting section: " + dataSection + " for filePos " + dataChunk.filePos);
+        index = new IndexChunkerTiled(dataSection, want);
+        startSrcPos = dataChunk.filePos;
+        valueList.add(dataSection.toString() + dataChunk.toString());
+      } catch (InvalidRangeException e) {
+        throw new IllegalStateException(e);
+      }
+    }
+
+    IndexChunker.Chunk chunk = index.next();
+    totalNelemsDone += chunk.getNelems();
+    chunk.setSrcPos(startSrcPos + chunk.getSrcElem() * elemSize);
+    next = chunk;
+    return true;
+  }
+
   public Layout.Chunk next() throws IOException {
     if (debugNext) System.out.println("  next="+next);
     return next;
@@ -168,6 +216,16 @@ public class LayoutTiled implements Layout {
     public DataChunk(int[] offset, long filePos) {
       this.offset = offset;
       this.filePos = filePos;
+    }
+
+    public String getChunkInfo() throws IOException {
+      //return "Please fix getChunkInfo in H5tiledLayoutBB.java";
+      String info = "";
+      StringBuilder sbuff = new StringBuilder();
+      sbuff.append("  ChunkedDataNode size=").append("size").append(" filterMask=").append("filterMask").append(" filePos=").append(filePos).append(" offsets= ");
+      for (long anOffset : offset) sbuff.append(anOffset).append(" ");
+
+      return info;
     }
   }
 

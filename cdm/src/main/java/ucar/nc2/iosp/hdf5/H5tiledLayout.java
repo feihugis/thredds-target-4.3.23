@@ -39,6 +39,7 @@ import ucar.nc2.iosp.LayoutTiled;
 import ucar.nc2.iosp.Layout;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Iterator to read/write subsets of an array.
@@ -101,6 +102,15 @@ class H5tiledLayout implements Layout {
 
   public boolean hasNext() {
     return delegate.hasNext();
+  }
+
+  /**
+   * revised by @author Fei Hu, hufei68@gmail.com
+   * @param info
+   * @return
+   */
+  public boolean hasNext(List<String> info) {
+    return delegate.hasNext(info);
   }
 
   public Chunk next() throws IOException {

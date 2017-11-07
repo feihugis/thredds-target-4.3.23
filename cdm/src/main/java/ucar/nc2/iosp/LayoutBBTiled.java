@@ -144,58 +144,50 @@ public class LayoutBBTiled implements LayoutBB {
     return true;
   }
 
-    public boolean hasNext(List<String> valueList) { // have to actually fetch the thing
-        if (totalNelemsDone >= totalNelems) return false;
+  public boolean hasNext(List<String> valueList) { // have to actually fetch the thing
+    if (totalNelemsDone >= totalNelems) return false;
 
-        if ((index == null) || !index.hasNext()) { // get new data node
-            try {
-                Section dataSection;
-                DataChunk dataChunk;
-
-                while (true) { // look for intersecting sections
-                    if (!chunkIterator.hasNext()) {
-                        next = null;
-                        return false;
-                    }
-
-                    // get next dataChunk
-                    try {
-                        dataChunk = chunkIterator.next();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        next = null;
-                        return false;
-                    }
-
-                    // make the dataSection for this chunk
-                    dataSection = new Section(dataChunk.getOffset(), chunkSize);
-                    if (debugIntersection)
-                        System.out.println(" test intersecting: " + dataSection + " want: " + want);
-                    if (dataSection.intersects(want)) // does it intersect ?
-                        break;
-                }
-
-                if (debug)
-                    System.out.println(" found intersecting dataSection: " + dataSection+" intersect= "+dataSection.intersect(want));
-
-                index = new IndexChunkerTiled(dataSection, want); // new indexer into this chunk
-                next = new Chunk( dataChunk.getByteBuffer()); // this does the uncompression
-                valueList.add(dataSection.toString() + dataChunk.getChunkInfo());
-
-            } catch (InvalidRangeException e) {
-                throw new IllegalStateException(e);
-
-            } catch (IOException e) {
-                throw new IllegalStateException(e);
-            }
+    if ((index == null) || !index.hasNext()) { // get new data node
+      try {
+        Section dataSection;
+        DataChunk dataChunk;
+        while (true) { // look for intersecting sections
+          if (!chunkIterator.hasNext()) {
+            next = null;
+            return false;
+          }
+          // get next dataChunk
+          try {
+            dataChunk = chunkIterator.next();
+          } catch (IOException e) {
+            e.printStackTrace();
+            next = null;
+            return false;
+          }
+          // make the dataSection for this chunk
+          dataSection = new Section(dataChunk.getOffset(), chunkSize);
+          if (debugIntersection)
+            System.out.println(" test intersecting: " + dataSection + " want: " + want);
+          if (dataSection.intersects(want)) // does it intersect ?
+            break;
         }
-
-        IndexChunker.Chunk chunk = index.next();
-        totalNelemsDone += chunk.getNelems();
-        next.setDelegate( chunk);
-
-        return true;
+        if (debug)
+          System.out.println(" found intersecting dataSection: " + dataSection+" intersect= "+dataSection.intersect(want));
+        index = new IndexChunkerTiled(dataSection, want); // new indexer into this chunk
+        next = new Chunk( dataChunk.getByteBuffer()); // this does the uncompression
+        valueList.add(dataSection.toString() + dataChunk.getChunkInfo());
+      } catch (InvalidRangeException e) {
+        throw new IllegalStateException(e);
+      } catch (IOException e) {
+        throw new IllegalStateException(e);
+      }
     }
+
+    IndexChunker.Chunk chunk = index.next();
+    totalNelemsDone += chunk.getNelems();
+    next.setDelegate( chunk);
+    return true;
+  }
 
   public LayoutBB.Chunk next() throws IOException {
     return next;
@@ -264,7 +256,15 @@ public class LayoutBBTiled implements LayoutBB {
       return delegate.getDestElem();
     }
 
-    public String getChunkInfo() { return "Please fix this funtion in LayoutBBTiled.java"; }
+    public String getChunkInfo() {
+      try {
+        throw new IllegalAccessException("Please implement ucar.nc2.iosp.LayoutBBTiled.Chunk.get"
+                                         + "ChunkInfo");
+      } catch (IllegalAccessException e) {
+        e.printStackTrace();
+      }
+      return "Please implement ucar.nc2.iosp.LayoutBBTiled.Chunk.getChunkInfo";
+    }
     public ByteBuffer getByteBuffer() {
       return bb;
     }

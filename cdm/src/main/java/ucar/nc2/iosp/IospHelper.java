@@ -293,7 +293,7 @@ public class IospHelper {
   }
 
 
-  static public String gitgetVarLocationInformation(LayoutBB layout) throws IOException {
+  static public String getVarLocationInformation(Layout layout) throws IOException {
       String info = new String();
       if (showLayoutTypes) System.out.println("***BB LayoutType=" + layout.getClass().getName());
 
