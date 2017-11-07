@@ -274,6 +274,27 @@ public class IospHelper {
     throw new IllegalStateException();
   } //
 
+  static public String getVarLocationInformation(Layout layout) throws IOException {
+    String info = new String();
+    if (showLayoutTypes) System.out.println("***BB LayoutType=" + layout.getClass().getName());
+
+    List<String> valueList = new ArrayList<String>();
+
+    /*while (layout.hasNext(valueList)) {
+      continue;
+    }*/
+
+    for(String location : valueList) {
+      info = info + location;
+    }
+
+    if (info.equals(null)) {
+      return "Please fix the function getVarLocationInformation in IospHelper";
+    } else {
+      return info;
+    }
+  }
+
   /**
    * Read data subset from ByteBuffer, create primitive array of size Layout.getTotalNelems.
    * Reading is controlled by the Layout object.

@@ -167,12 +167,20 @@ public class H4iosp extends AbstractIOServiceProvider {
         // make sure section is complete
         Section section = Section.fill(v.getShapeAsSection(), v.getShape());
 
-        if (vinfo.isCompressed && vinfo.isChunked) {
+      if (vinfo.isCompressed && vinfo.isChunked) {
             LayoutBBTiled.DataChunkIterator chunkIterator = new H4CompressedChunkIterator(vinfo);
             LayoutBB layout = new LayoutBBTiled(chunkIterator, vinfo.chunkSize, v.getElementSize(), section);
             info = IospHelper.getVarLocationInformation(layout);
            // return Array.factory(dataType.getPrimitiveClassType(), section.getShape(), data);
-        } else {
+        } else if (vinfo.isCompressed && !vinfo.isLinked && !vinfo.isChunked) {
+            if (showLayoutTypes) System.out.println("***notLinked, compressed");
+            Layout index = new LayoutRegular(0, v.getElementSize(), v.getShape(), section);
+            InputStream is = getCompressedInputStream(vinfo);
+            PositioningDataInputStream dataSource = new PositioningDataInputStream(is);
+            //Object data = IospHelper.readDataFill(dataSource, index, dataType, vinfo.fillValue);
+            return section.toString() + " start at " + vinfo.start + ", length is " + vinfo.length + ", compress code is " + "java.util.zip.InflaterInputStream;";
+            //return Array.factory(dataType.getPrimitiveClassType(), section.getShape(), data);
+      } else {
             info = "Do not support this format of data, please fix getVarLocationInformation(Variable v) getVarLocationInformation in H4iosp";
         }
 

@@ -37,6 +37,7 @@ public class TestNC4 {
     //System.out.println(var.getShortName()+ "+++++++++" + var.read(start, shape).getSize() + " , " + var.getVarLocationInformation());
     String varInfo = var.getVarLocationInformation();
     System.out.println(varInfo);
+    System.out.println(varInfo);
     int i=0;
     String[] chunks = varInfo.split(";");
     for (String chunk : chunks ) {
