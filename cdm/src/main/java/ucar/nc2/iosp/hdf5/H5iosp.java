@@ -160,7 +160,7 @@ public class H5iosp extends AbstractIOServiceProvider {
       assert vinfo.isChunked;
       ByteOrder bo = (vinfo.typeInfo.endian == 0) ? ByteOrder.BIG_ENDIAN : ByteOrder.LITTLE_ENDIAN;
       layout = new H5tiledLayoutBB(v2, wantSection, raf, vinfo.mfp.getFilters(), bo);
-      return IospHelper.getVarLocationInformation((LayoutBB) layout);
+      return IospHelper.getVarLocationInformation(layout);
     } else { // normal case
       if (debug) System.out.println("read variable " + v2.getFullName() + " vinfo = " + vinfo);
 
@@ -195,7 +195,7 @@ public class H5iosp extends AbstractIOServiceProvider {
       } else {
         layout = new LayoutRegular(dataPos, elemSize, v2.getShape(), wantSection);
       }
-      return IospHelper.getVarLocationInformation((LayoutBB) layout);
+      return IospHelper.getVarLocationInformation(layout);
     }
   }
 

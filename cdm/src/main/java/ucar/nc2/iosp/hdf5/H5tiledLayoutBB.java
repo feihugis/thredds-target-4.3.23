@@ -187,8 +187,7 @@ class H5tiledLayoutBB implements LayoutBB {
     }
 
     public String getChunkInfo() throws IOException {
-      String info = "";
-      info = delegate.toString() + ";";
+      String info = delegate.toString() + ";";
       return info;
     }
 
